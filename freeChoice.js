@@ -1,3 +1,4 @@
+var CONSTANT = [];
 function go() {
     $.ajax({
         url: 'https://opentdb.com/api.php?amount=30',
@@ -8,7 +9,7 @@ function go() {
 
         success: function (result) {
             console.log(result.results);
-            sort(result.results);
+            CONSTANT = sort(result.results);
         },
         error: function () {
             alert('Failed!');
@@ -18,14 +19,11 @@ function go() {
 
 
 function sort(resultArray) {
-    //differentiate between difficulties
-    //differentiate between multiple/not
+    //differentiates between difficulties
+
     var hardArray = [];
     var mediArray = [];
     var easyArray = [];
-
-    var multiArray = [];
-    var singleArray = [];
 
     //checks difficulty
     for (var x = 0; x < resultArray.length; x++) {
@@ -37,27 +35,58 @@ function sort(resultArray) {
             mediArray.push(resultArray[x]);
         }
     }
+    
+    //whatever array the player picked
+    if(document.getElementById('hard').selected === true) {
+        console.log(hardArray);
+        multiCheck(hardArray);
+    } else if (document.getElementById('medi').selected === true) {
+        console.log(mediArray);
+        multiCheck(mediArray);
+    } else {
+        console.log(easyArray);
+        multiCheck(easyArray);
+    }
 
-    //checks if multiple options {
-    for (var y = 0; y < resultArray.length; y++) {
-        if(resultArray[y].type === "multiple") {
-            multiArray.push(resultArray[y]);
+}
+
+
+function multiCheck(arr) {
+    //differentiates between multiple/true-false
+    var multiArray = [];
+    var singleArray = [];
+
+    for (var y = 0; y < arr.length; y++) {
+        console.log(arr[y]);
+        if(arr[y].type === 'boolean') {
+            singleArray.push(arr[y]);
         } else {
-            singleArray.push(resultArray[y]);
+            multiArray.push(arr[y]);
         }
     }
-    //whatever array the player picked
-    setUp(resultArray);
+
+    if(document.getElementById('multiY').selected === true) {
+        console.log(multiArray);
+        setUp(multiArray);
+    } else {
+        console.log(singleArray);
+        setUp(singleArray);
+    }
 }
 
 function setUp(resultArray) {
     var htm = "";
     for(var i = 0; i < resultArray.length; i++) {
-        htm += "<tr><td>"+resultArray[i].difficulty+"</td><td>"+resultArray[i].category+"</td>";
-        htm += "<td>"+resultArray[i].question+"</td><td class = 'secret'>"+resultArray[i].correct_answer+"</td></tr>";
+        htm += "<tr><td>"+resultArray[i].difficulty+"</td><td>"+resultArray[i].category+"</td><td>";
+        htm += resultArray[i].question+"</td><td><form>";
+        for(var x = 0; x < resultArray[i].incorrect_answers.length; x ++) {
+            htm += "<input type = 'radio' name = 'choice' value = 'incorrect"+x+">";
+        }
+        htm += "<input type = 'radio' name = 'choice' value = 'correct'></form>";
+
+        htm += "<td>Correct:"+resultArray[i].correct_answer+"</td><td>Incorrect:"+resultArray[i].incorrect_answers+"</td>";
+
+        htm += "</tr>";
     }
-
-
-
     $('#hi').html(htm);
 }
