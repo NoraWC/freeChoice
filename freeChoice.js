@@ -1,16 +1,30 @@
 var CONSTANT = [];
-//var URL = document.getElementById(""); //choose difficulty with this
 function go() {
+    var u = document.getElementById("category").selectedIndex + 8;
+    var cat = "";
+    if (u !== 8) {
+        cat = '&category='+u;
+    }
+    var x = document.getElementById("difficulty").selectedIndex;
+    var arr= ["easy","medium","hard"];
+    var dif = '&difficulty='+arr[x];
+
+    var typ = '&type=';
+    if(document.getElementById("multiY").selected === true){
+        typ += 'multiple';
+    } else {
+        typ += 'boolean';
+    }
+
     $.ajax({
-        url: 'https://opentdb.com/api.php?amount=50',
+        url: 'https://opentdb.com/api.php?amount=50'+cat+dif+typ,
         type: 'GET',
         //crossDomain: true,
         //dataType: 'jsonp',
 
-
         success: function (result) {
             console.log(result.results);
-            CONSTANT = sort(result.results);
+            //CONSTANT = multiCheck(result.results);
         },
         error: function () {
             alert('Failed!');
@@ -19,39 +33,7 @@ function go() {
 }
 
 
-function sort(resultArray) {
-    //differentiates between difficulties
-
-    var hardArray = [];
-    var mediArray = [];
-    var easyArray = [];
-
-    //checks difficulty
-    for (var x = 0; x < resultArray.length; x++) {
-        if(resultArray[x].difficulty === "hard") {
-            hardArray.push(resultArray[x]);
-        } else if(resultArray[x].difficulty === "easy") {
-            easyArray.push(resultArray[x]);
-        } else {
-            mediArray.push(resultArray[x]);
-        }
-    }
-    
-    //whatever array the player picked
-    if(document.getElementById('hard').selected === true) {
-        console.log(hardArray);
-        multiCheck(hardArray);
-    } else if (document.getElementById('medi').selected === true) {
-        console.log(mediArray);
-        multiCheck(mediArray);
-    } else {
-        console.log(easyArray);
-        multiCheck(easyArray);
-    }
-
-}
-
-
+/*
 function multiCheck(arr) {
     //differentiates between multiple/true-false
     var multiArray = [];
@@ -75,6 +57,7 @@ function multiCheck(arr) {
     }
 }
 
+*/
 function setUp(resultArray) {
     var htm = "";
     for(var i = 0; i < resultArray.length; i++) {

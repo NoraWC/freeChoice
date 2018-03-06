@@ -16,7 +16,7 @@
 <body>
 
 
-<form>
+<form id = 'theForm'>
     <p>Pick a level!</p>
     <select title = 'difficulty' id = 'difficulty'>
         <option id = 'easy'>Level 1</option>
@@ -26,10 +26,23 @@
 
     <input id = 'multiY' name = 'multi' type = 'radio'>
     <label for = 'multiY'>multiple choice</label>
+    
     <input id = 'multiN'  name = 'multi' type = 'radio'>
     <label for = 'multiN'>true/false</label>
 
+
+
+<script>
+    var g = "<select title = 'category' id = 'category'>";
+    for (var i = 8; i < 33; i++) {
+        g+="<option id = '"+i+"'>"+i+"</option>";
+    }
+    g+="</select>";
+    document.getElementById("theForm").innerHTML += g;
+</script>
+
 </form>
+
 <button onclick = 'go();'>Play!</button>
 
 <table id = 'hi'></table>
