@@ -1,7 +1,8 @@
 var CONSTANT = [];
+//var URL = document.getElementById(""); //choose difficulty with this
 function go() {
     $.ajax({
-        url: 'https://opentdb.com/api.php?amount=30',
+        url: 'https://opentdb.com/api.php?amount=50',
         type: 'GET',
         //crossDomain: true,
         //dataType: 'jsonp',
