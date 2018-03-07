@@ -7,10 +7,6 @@
     <script src = "freeChoice.js"></script>
     <!--
     ADD STYLESHEET
-
-    https://opentdb.com/api_config.php
-
-    NASA:: F1FqaoJqx35a2384FxixXSiaPOj1efesQNvD75zD
     -->
 </head>
 <body>
@@ -27,12 +23,21 @@
     <input id = 'multiY' name = 'multi' type = 'radio'>
     <label for = 'multiY'>multiple choice</label>
     
-    <input id = 'multiN'  name = 'multi' type = 'radio'>
-    <label for = 'multiN'>true/false</label>
-
-
+    <input id = 'multiN'  name = 'multi'  type = 'radio'>
+    <label for = 'multiN'>boolean</label>
 
 <script>
+    //choose number of questions
+    var nums = "<select title = 'questionNums' id = 'questionNums'>";
+    for(var x = 0; x < 5; x ++) {
+        nums+="<option id='"+x+"'>"+x+"</option>";
+    }
+    nums+= "</select>";
+    document.getElementById("theForm").innerHTML += nums;
+</script>
+
+<script>
+
     var g = "<select title = 'category' id = 'category'>";
     for (var i = 8; i < 33; i++) {
         g+="<option id = '"+i+"'>"+i+"</option>";
