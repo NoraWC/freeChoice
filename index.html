@@ -7,6 +7,7 @@
     <script src = "freeChoice.js"></script>
     <!--
     ADD STYLESHEET
+    CATEGORY NAMES
     -->
 </head>
 <body>
@@ -26,18 +27,12 @@
     <input id = 'multiN'  name = 'multi'  type = 'radio'>
     <label for = 'multiN'>boolean</label>
 
-<script>
-    //choose number of questions
-    var nums = "<select title = 'questionNums' id = 'questionNums'>";
-    for(var x = 0; x < 5; x ++) {
-        nums+="<option id='"+x+"'>"+x+"</option>";
-    }
-    nums+= "</select>";
-    document.getElementById("theForm").innerHTML += nums;
-</script>
+    <input id = 'questionNums' title = 'questionNums' type = 'text' placeholder = 'Pick a number between 1 and 50'>
+
 
 <script>
-
+    //choose category (Need to put in names of categories)
+    var arrNames = ["General Knowledge", "Entertainment:Books", "Entertainment:Film"];//fuuu
     var g = "<select title = 'category' id = 'category'>";
     for (var i = 8; i < 33; i++) {
         g+="<option id = '"+i+"'>"+i+"</option>";
@@ -48,7 +43,7 @@
 
 </form>
 
-<button onclick = 'go();'>Play!</button>
+<button onclick = 'go(document.getElementById("questionNums").value, parseInt(document.getElementById("category").selectedIndex)+8, document.getElementById("difficulty").selectedIndex, document.getElementById("multiY").checked);'>Play!</button>
 
 <table id = 'hi'></table>
 </body>

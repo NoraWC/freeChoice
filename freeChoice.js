@@ -1,34 +1,29 @@
-function go() {
+var TRIES = 0;
+function go(questions, category, difficulty, multi) {
 
-    //fails w/ boolean & easy on: 10; 13; 14; 16;;;;
+    var num = "amount="+questions;
 
-    //fails w/ multiple choice & medium on: 30; 25; 13
-
-    //fails w/ boolean & medium on: 10; 11; 13; 16; 19; 20; 21; 24; 25; 26; 27; 28; 29; 30; 31; 32 (!!!!)
-
-    //response_code: 1 for anything generated here?
-    var index = parseInt(document.getElementById("category").selectedIndex) + 8;
     var cat = "";
-    if (index !== 8) {
-        cat = '&category='+ index.toString();
+    if (category !== 8) {
+        cat = '&category='+ category.toString();
     }
-    var x = document.getElementById("difficulty").selectedIndex;
+
     var arr= ["easy","medium","hard"];
-    var dif = '&difficulty='+arr[x];
+    var dif = '&difficulty='+arr[difficulty];
 
     var typ = '&type=';
-    if(document.getElementById("multiY").checked === true){
+    if(multi){
         typ += 'multiple';
     } else {
         typ += 'boolean';
     }
 
     console.log("https://opentdb.com/api.php?amount=10&category=11&difficulty=medium&type=multiple");
-    console.log("https://opentdb.com/api.php?amount=10"+cat+dif+typ);
-    console.log(index, cat, dif, typ);
+    console.log("https://opentdb.com/api.php?"+num+cat+dif+typ);
+    console.log(category, num, cat, dif, typ);
 
     $.ajax({
-        url: 'https://opentdb.com/api.php?amount=1'+cat+dif+typ,
+        url: 'https://opentdb.com/api.php?'+num+cat+dif+typ,
         type: 'GET',
         crossDomain: true,
         //dataType: 'jsonp',
@@ -38,7 +33,11 @@ function go() {
                 console.log(result.results);
                 setUp(result.results);
             } else {
-                alert('There are no questions for that category! Try another.');
+                if(TRIES<=0) {
+                    alert("Could not find enough questions in that category! Trying fewer...");
+                    TRIES++;
+                }
+                go(questions-1, category, difficulty, multi);
             }
 
         },
@@ -63,8 +62,6 @@ function setUp(resultArray) {
             htm += "<input type = 'radio' name = 'choice' id ='answer"+x+"' value = 'answer"+x+">";
             htm += "<label for = 'answer"+x+"'>"+answers[x]+"</label>";
         }
-
-
         htm += "</tr>";
     }
     $('#hi').html(htm);
