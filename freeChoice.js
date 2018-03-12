@@ -1,7 +1,13 @@
 var TRIES = 0;
 function go(questions, category, difficulty, multi) {
 
-    var num = "amount="+questions;
+    var num = "amount=";
+    if(questions > 0 || questions <= 50) {
+        num += questions.toString();
+    } else {
+        num += "1";
+    }
+
 
     var cat = "";
     if (category !== 8) {
@@ -18,9 +24,7 @@ function go(questions, category, difficulty, multi) {
         typ += 'boolean';
     }
 
-    console.log("https://opentdb.com/api.php?amount=10&category=11&difficulty=medium&type=multiple");
-    console.log("https://opentdb.com/api.php?"+num+cat+dif+typ);
-    console.log(category, num, cat, dif, typ);
+    console.log(num, cat, dif, typ);
 
     $.ajax({
         url: 'https://opentdb.com/api.php?'+num+cat+dif+typ,
@@ -54,15 +58,35 @@ function setUp(resultArray) {
         htm += "<tr><td>"+resultArray[i].difficulty+"</td><td>"+resultArray[i].category+"</td><td>";
         htm += resultArray[i].question+"</td><td><form>";
         var answers = [];
-        answers = answers.concat(resultArray[i].incorrect_answers);
-        var pos = Math.floor(Math.random() * answers.length-1);
-        answers.splice(pos, 0, resultArray[i].correct_answer);
-        for(var x = 0; x < answers.length; x ++) {
 
-            htm += "<input type = 'radio' name = 'choice' id ='answer"+x+"' value = 'answer"+x+">";
+        answers = answers.concat(resultArray[i].incorrect_answers);
+
+        var pos = Math.floor(Math.random() * answers.length);
+
+        answers.splice(pos, 0, resultArray[i].correct_answer);
+
+        for(var x = 0; x < answers.length; x ++) {
+            if(x === pos) {
+                htm += "<input type = 'radio' class = 'choice"+i+"' name = 'rightChoice' id ='answer"+x+"' value = 'answer"+x+">"
+            } else {
+                htm += "<input type = 'radio'  class = 'choice"+i+"' name = 'wrongChoice' id ='answer"+x+"' value = 'answer"+x+">";
+            }
+
             htm += "<label for = 'answer"+x+"'>"+answers[x]+"</label>";
         }
-        htm += "</tr>";
+        htm += "</form></tr>";
     }
+    //runs triviaSubmit with objects, not array--unexpected identifier
+    resultArray = resultArray.toString();
+    console.log("<button id = 'finished' onclick = 'triviaSubmit("+resultArray+");'>Finished!</button>");
+    $('#done').html("<button id = 'finished' onclick = 'triviaSubmit("+resultArray+");'>Finished!</button>");
     $('#hi').html(htm);
+}
+
+function triviaSubmit(arr) {
+    arr = arr.split(',');
+    for(var i = 0; i < arr.length; i++) {
+        var choiceArr = [];
+        choiceArr.push(document.getElementsByClassName('choice'+i)); //the choice radio buttons
+    }
 }

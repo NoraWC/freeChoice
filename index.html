@@ -7,7 +7,6 @@
     <script src = "freeChoice.js"></script>
     <!--
     ADD STYLESHEET
-    CATEGORY NAMES
     -->
 </head>
 <body>
@@ -31,11 +30,15 @@
 
 
 <script>
-    //choose category (Need to put in names of categories)
-    var arrNames = ["General Knowledge", "Entertainment:Books", "Entertainment:Film"];//fuuu
+    //choose category
+    var arrNames = ["Pick a Category", "General Knowledge", "Entertainment:Books", "Entertainment:Film", "Entertainment: Music",
+        "Entertainment: Musicals & Theatres", "Entertainment: Television", "Entertainment: Video Games",
+        "Entertainment: Board Games", "Science & Nature", "Science: Computers", "Science: Mathematics", "Mythology",
+        "Sports", "Geography", "History", "Politics", "Art", "Celebrities", "Animals", "Vehicles", "Entertainment: Comics",
+        "Science: Gadgets", "Entertainment: Japanese Anime & Manga", "Entertainment: Cartoon & Animations"];
     var g = "<select title = 'category' id = 'category'>";
     for (var i = 8; i < 33; i++) {
-        g+="<option id = '"+i+"'>"+i+"</option>";
+        g+="<option id = '"+i+"'>"+arrNames[i-8]+"</option>";
     }
     g+="</select>";
     document.getElementById("theForm").innerHTML += g;
@@ -43,8 +46,12 @@
 
 </form>
 
-<button onclick = 'go(document.getElementById("questionNums").value, parseInt(document.getElementById("category").selectedIndex)+8, document.getElementById("difficulty").selectedIndex, document.getElementById("multiY").checked);'>Play!</button>
+<button onclick = 'go(parseInt(document.getElementById("questionNums").value),
+parseInt(document.getElementById("category").selectedIndex)+8,
+document.getElementById("difficulty").selectedIndex,
+document.getElementById("multiY").checked);'>Play!</button>
 
 <table id = 'hi'></table>
+<div id = 'done'></div>
 </body>
 </html>
