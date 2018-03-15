@@ -5,14 +5,17 @@ function clearAll() {
     RESULT_ARRAY=[];
     $('#warning').html("");
 }
-
+var FIRST_QS = 0;
 function go(questions, category, difficulty, multi) {
 
     var num = "amount=";
     if(questions > 0 || questions <= 50) {
         num += questions.toString();
+        if(FIRST_QS === 0) {
+            FIRST_QS = questions;
+        }
     } else {
-        num += "1";
+        num += "5";
     }
 
 
@@ -45,10 +48,12 @@ function go(questions, category, difficulty, multi) {
                 RESULT_ARRAY = result.results;
                 console.log(RESULT_ARRAY);
                 setUp(result.results);
-            } else {
-                $('#warning').html("Could not find enough questions in that category! Try another level or another category if nothing appears.");
-
+            } else if (questions > 1) {
+                $('#warning').html("Not enough questions were found! You may have fewer questions or a different difficulty level.");
                 go(questions-1, category, difficulty, multi);
+
+            } else if (difficulty !== 0) {
+                go(FIRST_QS, category, difficulty-1, multi);
             }
 
         },
@@ -60,10 +65,16 @@ function go(questions, category, difficulty, multi) {
 
 
 function setUp(resultArray) {
-    var htm = "";
+    var category = parseInt(document.getElementById("category").selectedIndex);
+    if(category === 0) {
+        category = 9;
+    } else {
+        category += 8;
+    }
+    var htm = "<div>Difficulty: "+resultArray[0].difficulty+" Category: "+document.getElementById(category).innerHTML+"</div>";
     for(var i = 0; i < resultArray.length; i++) {
-        htm += "<tr id = 'row"+i+"'><td>"+resultArray[i].difficulty+"</td><td>"+resultArray[i].category+"</td><td>";
-        htm += resultArray[i].question+"</td><td id = 'actually"+i+"'></td><td><form>";
+        htm += "<tr id = 'row"+i+"'><td class = 'qs'>";
+        htm += resultArray[i].question+"</td><td id = 'actually"+i+"'></td><td class = 'buttons' id = 'choices"+i+"'><form>";
         var answers = [];
 
         answers = answers.concat(resultArray[i].incorrect_answers);
@@ -74,14 +85,14 @@ function setUp(resultArray) {
 
         for(var x = 0; x < answers.length; x ++) {
             if(x === pos) {
-                htm += "<input type = 'radio' class = 'rightanswer' name = 'choice"+i+"' value = 'answer"+x+">"
+                htm += "<input type = 'radio' class = 'rightanswer' id = 'choice"+i+"' name = 'choice"+i+"' value = 'answer"+x+">"
             } else {
-                htm += "<input type = 'radio'  class = 'wronganswer' name = 'choice"+i+"' value = 'answer"+x+">";
+                htm += "<input type = 'radio'  class = 'wronganswer' id = 'choice"+i+"' name = 'choice"+i+"' value = 'answer"+x+">";
             }
 
-            htm += "<label for = 'answer"+x+"'>"+answers[x]+"</label>";
+            htm += "<label for = 'answer"+x+"'>"+answers[x]+"</label><br>";
         }
-        htm += "</form></tr>";
+        htm += "</form></td></tr>";
     }
     $('#done').html("<button id = 'finished' onclick = 'triviaSubmit();'>Finished!</button>");
     $('#hi').html(htm);
@@ -98,12 +109,11 @@ function triviaSubmit() {
 
                 if(choiceArr[x].className === 'rightanswer') {
                     document.getElementById('row'+i).className = 'correct';
-                    console.log(i+'correct');
-
+                    $('#actually'+i).hide();
                 } else {
                     document.getElementById('row'+i).className = 'incorrect';
-                    console.log(i+'incorrect');
                     $('#actually'+i).html('Sorry, but you should have picked '+RESULT_ARRAY[i].correct_answer);
+                    $('#choices'+i).hide();
                 }
             }
         }

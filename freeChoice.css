@@ -5,3 +5,18 @@
 .incorrect {
     background-color: crimson;
 }
+
+td {
+    border: white 2px solid;
+}
+
+.buttons {
+    border-radius: 15%;
+}
+#theForm {
+    position: relative;
+    left: 35%;
+}
+body {
+    background-color: #CCE9F5
+}
