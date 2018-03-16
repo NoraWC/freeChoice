@@ -1,17 +1,26 @@
 .correct {
+    border: 2px black solid;
     background-color : lightgreen;
 }
 
 .incorrect {
+    border: 2px black solid;
     background-color: crimson;
 }
 
-td {
-    border: white 2px solid;
+div {
+    margin-bottom: 2px;
 }
 
 .buttons {
     border-radius: 15%;
+}
+.container {
+    border: 1px darkblue solid;
+    background-color: #AAD8E4;
+    border-radius: 13%;
+    width: 50%;
+    padding: 1%;
 }
 #theForm {
     position: relative;

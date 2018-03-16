@@ -1,8 +1,6 @@
-var RESULT_ARRAY = [];
-
+var ARRAY =[];
 function clearAll() {
     $('#hi').html("");
-    RESULT_ARRAY=[];
     $('#warning').html("");
 }
 var FIRST_QS = 0;
@@ -45,9 +43,8 @@ function go(questions, category, difficulty, multi) {
         success: function (result) {
             if(result.response_code !== 1) {
                 console.log(result.results);
-                RESULT_ARRAY = result.results;
-                console.log(RESULT_ARRAY);
-                setUp(result.results);
+                ARRAY = result.results;
+                setUpTwo(result.results);
             } else if (questions > 1) {
                 $('#warning').html("Not enough questions were found! You may have fewer questions or a different difficulty level.");
                 go(questions-1, category, difficulty, multi);
@@ -63,6 +60,43 @@ function go(questions, category, difficulty, multi) {
     });
 }
 
+function setUpTwo(resultArray) {
+    var category = parseInt(document.getElementById("category").selectedIndex);
+    if(category === 0) {
+        category = 9;
+    } else {
+        category += 8;
+    }
+    var fin = "<div id = 'cat-dif'>"+$('#'+category).html()+": "+resultArray[0].difficulty+"</div>";
+    for (var i = 0; i < resultArray.length; i++) {
+        fin += "<div class = 'container' id = 'contain"+i+"'><div class = 'question' id = 'quest"+i+"'>"+resultArray[i].question+"</div>";
+        fin += "<div class = 'actually' id = 'act"+i+"'></div>";
+        fin += "<div class = 'buttons' id = 'choices"+i+"'>";
+
+        var answers = [];
+
+        answers = answers.concat(resultArray[i].incorrect_answers);
+
+        var pos = Math.floor(Math.random() * answers.length);
+
+        answers.splice(pos, 0, resultArray[i].correct_answer);
+
+        var choices = "";
+        for(var x = 0; x < answers.length; x ++) {
+
+            if(x === pos) {
+                choices += "<input type = 'radio' class = 'rightanswer' id = 'choice"+i+"' name = 'choice"+i+"' value = '"+answers[x]+"'>"
+            } else {
+                choices += "<input type = 'radio'  class = 'wronganswer' id = 'choice"+i+"' name = 'choice"+i+"' value = '"+answers[x]+"'>";
+            }
+
+            choices += "<span id = 'answer"+x+"'>"+answers[x]+"</span><br>";
+        }
+        fin += choices + "</div></div>";
+    }
+    $('#display').html(fin);
+    $('#done').html("<button id = 'finished' onclick = 'triviaSubmit(ARRAY);'>Finished!</button>");
+}
 
 function setUp(resultArray) {
     var category = parseInt(document.getElementById("category").selectedIndex);
@@ -94,12 +128,12 @@ function setUp(resultArray) {
         }
         htm += "</form></td></tr>";
     }
-    $('#done').html("<button id = 'finished' onclick = 'triviaSubmit();'>Finished!</button>");
+
     $('#hi').html(htm);
 }
 
-function triviaSubmit() {
-    for(var i = 0; i < RESULT_ARRAY.length; i++) {
+function triviaSubmit(resultArray) {
+    for(var i = 0; i < resultArray.length; i++) {
 
         var choiceArr = document.getElementsByName('choice'+i); //the choice radio buttons
 
@@ -108,11 +142,13 @@ function triviaSubmit() {
             if(choiceArr[x].checked) {
 
                 if(choiceArr[x].className === 'rightanswer') {
-                    document.getElementById('row'+i).className = 'correct';
-                    $('#actually'+i).hide();
+                    document.getElementById('contain'+i).className = 'correct';
+                    $('#act'+i).html('Correct! You chose ' +resultArray[i].correct_answer);
+                    $('#choices'+i).hide();
                 } else {
-                    document.getElementById('row'+i).className = 'incorrect';
-                    $('#actually'+i).html('Sorry, but you should have picked '+RESULT_ARRAY[i].correct_answer);
+                    document.getElementById('contain'+i).className = 'incorrect';
+                    console.log(choiceArr[x]);
+                    $('#act'+i).html('Sorry! You picked '+choiceArr[x].value+' but you should have picked '+resultArray[i].correct_answer);
                     $('#choices'+i).hide();
                 }
             }
