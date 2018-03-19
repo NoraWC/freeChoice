@@ -1,9 +1,11 @@
 .correct {
     border: 2px black solid;
     background-color : lightgreen;
+    width: 30%;
 }
 
 .incorrect {
+    width: 30%;
     border: 2px black solid;
     background-color: crimson;
 }
@@ -19,8 +21,13 @@ div {
     border: 1px darkblue solid;
     background-color: #AAD8E4;
     border-radius: 13%;
-    width: 50%;
+    width: 30%;
     padding: 1%;
+}
+
+#display {
+    position: relative;
+    left: 35%;
 }
 #theForm {
     position: relative;
@@ -28,4 +35,7 @@ div {
 }
 body {
     background-color: #CCE9F5
+}
+.secret {
+    display : none;
 }
