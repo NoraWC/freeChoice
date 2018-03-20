@@ -1,17 +1,23 @@
 .correct {
-    border: 2px black solid;
     background-color : lightgreen;
-    width: 30%;
+    border: 1px darkgreen solid;
+}
+#result {
+
 }
 
 .incorrect {
-    width: 30%;
-    border: 2px black solid;
     background-color: crimson;
+    border: 1px darkred solid;
 }
 
 div {
     margin-bottom: 2px;
+    position: relative;
+    border-radius: 13%;
+    width: 200px;
+    left: 35%;
+    padding: 1%;
 }
 
 .buttons {
@@ -20,15 +26,9 @@ div {
 .container {
     border: 1px darkblue solid;
     background-color: #AAD8E4;
-    border-radius: 13%;
-    width: 30%;
-    padding: 1%;
+    text-align: center;
 }
 
-#display {
-    position: relative;
-    left: 35%;
-}
 #theForm {
     position: relative;
     left: 35%;
@@ -38,4 +38,5 @@ body {
 }
 .secret {
     display : none;
+    border: none;
 }

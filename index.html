@@ -19,20 +19,21 @@
         <option id = 'medi'>Level 2</option>
         <option id = 'hard'>Level 3</option>
     </select>
-    <div> Choose:
-        <br>
+    <br>
+    Choose:
+    <br>
     <input id = 'multiY' name = 'multi' type = 'radio'>
     <label for = 'multiY'>Multiple Choice</label>
         or
-    <input id = 'multiN'  name = 'multi'  type = 'radio'>
+    <input id = 'multiN' checked name = 'multi'  type = 'radio'>
     <label for = 'multiN'>True/False</label>
-    </div>
+    <br>
     <input id = 'questionNums' title = 'questionNums' type = 'text' placeholder = 'Pick a number between 1 and 50'>
     <br>
 
 <script>
     //choose category
-    var arrNames = ["Pick a Category", "General Knowledge", "Entertainment:Books", "Entertainment:Film", "Entertainment: Music",
+    var arrNames = ["Pick a Category", "General Knowledge", "Entertainment: Books", "Entertainment: Film", "Entertainment: Music",
         "Entertainment: Musicals & Theatres", "Entertainment: Television", "Entertainment: Video Games",
         "Entertainment: Board Games", "Science & Nature", "Science: Computers", "Science: Mathematics", "Mythology",
         "Sports", "Geography", "History", "Politics", "Art", "Celebrities", "Animals", "Vehicles", "Entertainment: Comics",
@@ -52,10 +53,11 @@ parseInt(document.getElementById("category").selectedIndex)+8,
 document.getElementById("difficulty").selectedIndex,
 document.getElementById("multiY").checked);'>Play!</button>
 
-<div id = 'score'></div>
-<div id = 'result'></div>
+<div id = 'cat-dif'></div>
 
-<div id = 'display'></div>
+<div id = 'result' class = 'secret'><div id = 'score'></div></div>
+
+<span id = 'display'></span>
 
 </body>
 </html>
