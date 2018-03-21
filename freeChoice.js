@@ -7,7 +7,7 @@ function clearAll() {
     //resets all displayed values
     //doesn't need to reset questions because the next one will come up anyway
     $('#hi').html("");
-    $('#warning').html("");
+    $('#warning').html("Please allow a moment after pressing Play to allow questions to generate!");
     $('#result').html("");
     document.getElementById('result').className = 'secret';
 }
@@ -61,7 +61,7 @@ function go(questions, category, difficulty, multi) {
                 setUp(result.results);
             } else if (questions > 1) {
                 //if too many questions were answered, display error message and try with fewer questions
-                $('#warning').html("Not enough questions were found! You may recieve fewer questions than you asked. <br> Working...");
+                $('#warning').html("Not enough questions were found! You may recieve fewer questions than you asked for.");
                 go(questions-1, category, difficulty, multi);
             }
 
@@ -83,7 +83,7 @@ function setUp(resultArray) {
 
     //capitalizes first letter of the difficulty level to make it look nicer
     console.log(resultArray);
-    var diff = resultArray[0].difficulty;//[0].toUpperCase() + resultArray[0].difficulty.slice(1,resultArray[0].difficulty.length);
+    var diff = resultArray[0].difficulty[0].toUpperCase() + resultArray[0].difficulty.slice(1,resultArray[0].difficulty.length);
 
     $('#cat-dif').html(diff + " " +$('#'+category).html());
 
@@ -92,36 +92,41 @@ function setUp(resultArray) {
     for (var i = 0; i < resultArray.length; i++) {
         //creates set of divs to hold info; each one after the first is invisible
         if(i > 0) {
-            fin += "<div class = 'secret' id = 'contain" + i + "'>";
+            fin += "<div class = 'secret' id = 'contain" + i + "'>Question "+(i+1)+" of "+resultArray.length+": ";
         } else {
-            fin += "<div class = 'container' id = 'contain" + i + "'>";
+            fin += "<div class = 'container' id = 'contain" + i + "'>Question "+(i+1)+" of "+resultArray.length+": ";
         }
         //the trivia question
         fin += "<span class = 'question' id = 'quest"+i+"'>"+resultArray[i].question+"</span>";
         //area for the choice options
         fin += "<br><span id = 'choices"+i+"'>";
 
-        //array to hole all answers
+        //array to hold all answer choices (optimized so both 2-choice and 4-choice questions go through)
         var answers = resultArray[i].incorrect_answers;
+
         //gets a random position....
         var pos = Math.floor(Math.random() * answers.length);
+
         //and inserts the right answer into the array at that position
         answers.splice(pos, 0, resultArray[i].correct_answer);
 
         for(var x = 0; x < answers.length; x ++) {
-            //creates a radio button for each answer with the correct class
+            //creates a radio button for each answer with the correct class:
             if(x === pos) {
-                //for the right answer
-                fin += "<input type = 'radio' class = 'rightanswer' id = 'right"+i+"' name = 'choice"+i+"' value = '"+answers[x]+"'>"
+                //rightanswer for the right answer (plus an id so I can use it to grab the right answer in moveOn())
+                fin += "<input type = 'radio' class = 'rightanswer' id = 'right"+i+"' name = 'choice"+i;
+                fin += "' onclick = 'moveOn("+i+", "+resultArray.length+")' value = '"+answers[x]+"'>";
             } else {
-                //for the wrong answer
-                fin += "<input type = 'radio' class = 'wronganswer' name = 'choice"+i+"' value = '"+answers[x]+"'>";
+                //wronganswer for the wrong answer
+                fin += "<input type = 'radio' class = 'wronganswer' name = 'choice"+i;
+                fin += "' onclick = 'moveOn("+i+", "+resultArray.length+")' value = '"+answers[x]+"'>";
             }
             //labels the choice with the relevant option text
             fin += "<label for = 'choice"+x+"'>"+answers[x]+"</label><br>";
         }
-        //when the button is clicked, moves to the check-answer function
-        fin += "</span><button id = 'finished' onclick = 'moveOn("+i+", "+resultArray.length+");'>Finished!</button></div>";
+
+        //moves to the verification function
+        fin += "</span></div>";
     }
 
     $('#display').html(fin);
@@ -134,34 +139,44 @@ function moveOn(i, length) {
 
     $('#contain'+i).hide();
 
-    if (next < length) {
-        //show the next element
-        document.getElementById('contain'+next).classList.remove('secret');
-        document.getElementById('contain'+next).classList.add('container');
-    } else {
-        //display a final message w/ % correct and sundries
-    }
-    var choiceArr = document.getElementsByName('choice'+i); // list of the choice radio buttons
+    // list of the choice radio buttons for this question
+    var choiceArr = document.getElementsByName('choice'+i);
 
     for(var x = 0; x < choiceArr.length; x ++) {
-
+        //if the current option was selected (in order to minimize unnecessary iteration)
         if(choiceArr[x].checked) {
-            //if the current option was selected (effectively only checking the selected option), check if it's correct
+            //if they got it right,
             if(choiceArr[x].className === 'rightanswer') {
-                //if they got it right, display a win message
+                //display a win message
                 document.getElementById('result').className = 'correct';
                 $('#result').html('Question ' + next + ' of '+ length+': '+$('#quest'+i).html() + '<br> Correct! You chose ' +choiceArr[x].value);
-                //increments global var SCORE (stays the same throughout a session)
+                //increment global var SCORE (stays the same throughout a session)
                 SCORE ++;
+            //if not
             } else {
-                //if not, display a lose message with the correct answer
+                //display a lose message with the correct answer
                 document.getElementById('result').className = 'incorrect';
                 var rightAns = document.getElementById('right'+i).value;
                 $('#result').html('Question ' + next + ' of '+ length+': '+$('#quest'+i).html() + '<br> Sorry! You picked '+choiceArr[x].value+' but you should have picked '+rightAns+'.');
             }
         }
     }
-    //updates relative score (out of total)
+    //increments total question count
     QS_SO_FAR ++;
+
+    //updates total score
     $('#score').html("Score: "+SCORE + "/"+QS_SO_FAR);
+    var percentScore = ((SCORE/QS_SO_FAR)*100).toFixed();
+
+    $('#data').html("Your grade so far is "+percentScore+"% and you've answered "+QS_SO_FAR+" questions.");
+
+    if (next < length) {
+        //shows the next element
+        document.getElementById('contain'+next).classList.remove('secret');
+        document.getElementById('contain'+next).classList.add('container');
+    } else {
+        //displays final message
+        $('#warning').html("Game over! You got "+percentScore+"% of questions correct. Click 'Play' below to play again!");
+    }
+
 }

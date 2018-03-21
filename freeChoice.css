@@ -2,9 +2,7 @@
     background-color : lightgreen;
     border: 1px darkgreen solid;
 }
-#result {
 
-}
 
 .incorrect {
     background-color: crimson;
@@ -21,12 +19,18 @@ div {
     padding: 1%;
 }
 
+.displayScore {
+    position: relative;
+    left: 65%;
+    border: 1px darkgoldenrod solid;
+    background-color: bisque;
+}
 
 .container {
     border: 1px darkblue solid;
     background-color: #AAD8E4;
     text-align: center;
-
+    margin: 3px;
 }
 
 #theForm {
@@ -39,4 +43,12 @@ body {
 .secret {
     display : none;
     border: none;
+}
+button {
+    position: relative;
+    left: 40%;
+}
+#warning {
+    position: relative;
+    right: 10%;
 }

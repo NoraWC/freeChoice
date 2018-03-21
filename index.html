@@ -10,8 +10,10 @@
 <body>
 
 <h3>Nora Coates Free Choice Api: Trivia</h3>
+<div id = 'data' class = 'secret displayScore'></div>
+
 <form id = 'theForm'>
-    <p id = 'warning'></p>
+    <p id = 'warning'>Please allow a moment after pressing Play to allow questions to generate!</p>
     <br>
     <label for = 'difficulty'>Pick a Level!</label>
     <select title = 'difficulty' id = 'difficulty'>
@@ -22,10 +24,10 @@
     <br>
     Choose:
     <br>
-    <input id = 'multiY' name = 'multi' type = 'radio'>
+    <input id = 'multiY' checked name = 'multi' type = 'radio'>
     <label for = 'multiY'>Multiple Choice</label>
         or
-    <input id = 'multiN' checked name = 'multi'  type = 'radio'>
+    <input id = 'multiN' name = 'multi'  type = 'radio'>
     <label for = 'multiN'>True/False</label>
     <br>
     <input id = 'questionNums' title = 'questionNums' type = 'text' size = '30' placeholder = 'Pick a number between 1 and 50'>
@@ -48,14 +50,12 @@
 
 </form>
 
-<button onclick = 'clearAll(); go(parseInt($("#questionNums").val()),
+<button onclick = 'document.getElementById("data").classList.remove("secret"); clearAll(); go(parseInt($("#questionNums").val()),
 parseInt(document.getElementById("category").selectedIndex)+8,
 document.getElementById("difficulty").selectedIndex,
-$("#multiY").checked);'>Play!</button>
+document.getElementById("multiY").checked);'>Play!</button>
 
 <div id = 'cat-dif'></div>
-
-<div id = 'score'></div>
 
 <div id = 'result' class = 'secret'></div>
 
