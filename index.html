@@ -15,9 +15,9 @@
     <br>
     <label for = 'difficulty'>Pick a Level!</label>
     <select title = 'difficulty' id = 'difficulty'>
-        <option id = 'easy'>Level 1</option>
-        <option id = 'medi'>Level 2</option>
-        <option id = 'hard'>Level 3</option>
+        <option id = '1'>Level 1</option>
+        <option id = '2'>Level 2</option>
+        <option id = '3'>Level 3</option>
     </select>
     <br>
     Choose:
@@ -28,7 +28,7 @@
     <input id = 'multiN' checked name = 'multi'  type = 'radio'>
     <label for = 'multiN'>True/False</label>
     <br>
-    <input id = 'questionNums' title = 'questionNums' type = 'text' placeholder = 'Pick a number between 1 and 50'>
+    <input id = 'questionNums' title = 'questionNums' type = 'text' size = '30' placeholder = 'Pick a number between 1 and 50'>
     <br>
 
 <script>
@@ -48,14 +48,16 @@
 
 </form>
 
-<button onclick = 'clearAll(); go(parseInt(document.getElementById("questionNums").value),
+<button onclick = 'clearAll(); go(parseInt($("#questionNums").val()),
 parseInt(document.getElementById("category").selectedIndex)+8,
 document.getElementById("difficulty").selectedIndex,
-document.getElementById("multiY").checked);'>Play!</button>
+$("#multiY").checked);'>Play!</button>
 
 <div id = 'cat-dif'></div>
 
-<div id = 'result' class = 'secret'><div id = 'score'></div></div>
+<div id = 'score'></div>
+
+<div id = 'result' class = 'secret'></div>
 
 <span id = 'display'></span>
 

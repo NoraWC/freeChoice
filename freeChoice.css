@@ -14,19 +14,19 @@
 div {
     margin-bottom: 2px;
     position: relative;
-    border-radius: 13%;
-    width: 200px;
+    border-radius: 16%;
+    width: 30%;
+    height: 30%;
     left: 35%;
     padding: 1%;
 }
 
-.buttons {
-    border-radius: 15%;
-}
+
 .container {
     border: 1px darkblue solid;
     background-color: #AAD8E4;
     text-align: center;
+
 }
 
 #theForm {
