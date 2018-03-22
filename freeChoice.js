@@ -5,28 +5,25 @@ var QS_SO_FAR = 0;
 
 function clearAll() {
     //resets all displayed values
-    //doesn't need to reset questions because the next one will come up anyway
-    $('#hi').html("");
-    $('#warning').html("Please allow a moment after pressing Play to allow questions to generate!");
+    $('#cat-dif').html("");
+    $('.container').className = 'secret';
+    $('#warning').html("");
     $('#result').html("");
     document.getElementById('result').className = 'secret';
 }
-
 
 function go(questions, category, difficulty, multi) {
     console.log(difficulty);
     //takes the number of questions from the html form (if they didn't enter any, defaults to 5
     var num = "amount=";
-    if(questions === undefined || questions === NaN) {
-        num += "5";
+    questions = parseInt(questions);
+    if(questions !== undefined && questions !== NaN && questions > 0 && questions <= 50) {
+        //surprisingly, I really do need to check for all of this
+        num += questions.toString();
     } else {
-        if(questions > 0 || questions <= 50) {
-            num += questions.toString();
-        } else {
-            num += "5";
-        }
+        $('#warning').html("That's an invalid number of questions! You get 5 instead.");
+        num += "5";
     }
-
 
     //takes the category selected (the list of categories in the API starts at 8, so it adds 8 to the index)
     //defaults to 0 (aka 8), general knowledge
@@ -46,23 +43,25 @@ function go(questions, category, difficulty, multi) {
     } else {
         typ += 'boolean';
     }
-    console.log('https://opentdb.com/api.php?'+num+cat+dif+typ);
-
 
     $.ajax({
         url: 'https://opentdb.com/api.php?'+num+cat+dif+typ,
         type: 'GET',
         crossDomain: true,
-        //dataType: 'jsonp',
 
         success: function (result) {
             if(result.response_code !== 1) {
-                console.log(result.results);
-                setUp(result.results);
+                setUp(result.results, category);
             } else if (questions > 1) {
-                //if too many questions were answered, display error message and try with fewer questions
-                $('#warning').html("Not enough questions were found! You may recieve fewer questions than you asked for.");
-                go(questions-1, category, difficulty, multi);
+                //if there aren't enough questions, display error message and try with fewer questions
+                clearAll();
+                if (questions !== 0) {
+                    $('#warning').html("Not enough questions were found! You may receive fewer questions than you asked for.");
+                    go(questions-1, category, difficulty, multi);
+                } else {
+                    //if all else fails, tell the player
+                    $('#warning').html("Not enough questions were found! Please try another category.");
+                }
             }
 
         },
@@ -72,10 +71,8 @@ function go(questions, category, difficulty, multi) {
     });
 }
 
-function setUp(resultArray) {
-    var category = parseInt(document.getElementById("category").selectedIndex);
-
-    if(category === 0) {
+function setUp(resultArray, category) {
+    if(category === 0 || category === undefined) {
         category = 9;
     } else {
         category += 8;
@@ -115,28 +112,25 @@ function setUp(resultArray) {
             if(x === pos) {
                 //rightanswer for the right answer (plus an id so I can use it to grab the right answer in moveOn())
                 fin += "<input type = 'radio' class = 'rightanswer' id = 'right"+i+"' name = 'choice"+i;
-                fin += "' onclick = 'moveOn("+i+", "+resultArray.length+")' value = '"+answers[x]+"'>";
             } else {
                 //wronganswer for the wrong answer
                 fin += "<input type = 'radio' class = 'wronganswer' name = 'choice"+i;
-                fin += "' onclick = 'moveOn("+i+", "+resultArray.length+")' value = '"+answers[x]+"'>";
             }
+            //moves to the verification function on click
+            fin += "' onclick = 'moveOn("+i+", "+resultArray.length+")' value = '"+answers[x]+"'><label for = 'choice"+x+"'>"+answers[x]+"</label><br>";
             //labels the choice with the relevant option text
-            fin += "<label for = 'choice"+x+"'>"+answers[x]+"</label><br>";
         }
-
-        //moves to the verification function
         fin += "</span></div>";
     }
-
     $('#display').html(fin);
 }
 
 function moveOn(i, length) {
 
-    //1 more than the element we're on
+    //1 more than the element we're on ( allows the function to show the next element)
     var next = i+1;
 
+    //hides current/previous question
     $('#contain'+i).hide();
 
     // list of the choice radio buttons for this question
@@ -168,7 +162,7 @@ function moveOn(i, length) {
     $('#score').html("Score: "+SCORE + "/"+QS_SO_FAR);
     var percentScore = ((SCORE/QS_SO_FAR)*100).toFixed();
 
-    $('#data').html("Your grade so far is "+percentScore+"% and you've answered "+QS_SO_FAR+" questions.");
+    $('#data').html("Your grade so far is "+percentScore+"% out of "+QS_SO_FAR+" questions.");
 
     if (next < length) {
         //shows the next element
@@ -176,7 +170,10 @@ function moveOn(i, length) {
         document.getElementById('contain'+next).classList.add('container');
     } else {
         //displays final message
-        $('#warning').html("Game over! You got "+percentScore+"% of questions correct. Click 'Play' below to play again!");
+        if (percentScore > 50) {
+            $('#warning').html("Game over! You got "+percentScore+"% of questions correct. Good job! Click 'Play' below to play again!");
+        } else {
+            $('#warning').html("Game over! You got "+percentScore+"% of questions correct. Better luck next time! Click 'Play' below to play again!");
+        }
     }
-
 }
